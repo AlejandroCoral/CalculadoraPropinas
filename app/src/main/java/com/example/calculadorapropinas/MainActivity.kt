@@ -43,7 +43,7 @@ class MainActivity : ComponentActivity() {
 fun PantallaPrincipal() {
     var montoCuenta by remember { mutableStateOf("") }
     var porcentajePropina by remember { mutableStateOf("") }
-    var mensaje by remember { mutableStateOf("Ingrese los datos para calcular la propina") }
+    var resultado by remember { mutableStateOf("Ingrese los datos y presione calcular") }
 
     Column(
         modifier = Modifier
@@ -82,7 +82,17 @@ fun PantallaPrincipal() {
 
         Button(
             onClick = {
-                mensaje = "Botón presionado correctamente"
+                val monto = montoCuenta.toDoubleOrNull()
+                val porcentaje = porcentajePropina.toDoubleOrNull()
+
+                if (monto != null && porcentaje != null) {
+                    val propina = monto * porcentaje / 100
+                    val total = monto + propina
+
+                    resultado = "Propina: $${"%.2f".format(propina)}\nTotal a pagar: $${"%.2f".format(total)}"
+                } else {
+                    resultado = "Por favor ingrese valores válidos"
+                }
             }
         ) {
             Text(text = "Calcular propina")
@@ -91,17 +101,9 @@ fun PantallaPrincipal() {
         Spacer(modifier = Modifier.height(24.dp))
 
         Text(
-            text = mensaje,
+            text = resultado,
             fontSize = 18.sp
         )
     }
 }
 
-
-@Preview(showBackground = true)
-@Composable
-fun PantallaPrincipalPreview() {
-    CalculadoraPropinasTheme {
-        PantallaPrincipal()
-    }
-}
